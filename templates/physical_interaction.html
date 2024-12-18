@@ -155,18 +155,7 @@
     </div>
 
     <script>
-        // Function to show loading indicator
-        function showLoading() {
-            $('#loadingIndicator').show();
-            $('#interactionMessage').text('Please wait...');
-            $('#baymaxAnimation').html('');
-            $('#baymaxAudio').html('');
-        }
 
-        // Function to hide loading indicator
-        function hideLoading() {
-            $('#loadingIndicator').hide();
-        }
 
         // Toggle Hug Baymax button state (Hide gif if clicked again)
         let isHugged = false;
@@ -209,13 +198,63 @@
                 $('#chatInput').val('');
                 $('#chatboxBody').scrollTop($('#chatboxBody')[0].scrollHeight);
 
-                // Simulate Baymax response (replace with actual chatbot logic)
-                setTimeout(function() {
-                    $('#chatboxBody').append('<p><strong>Baymax:</strong> You said: ' + userMessage + '</p>');
+                // Show loading indicator while waiting for Gemini's response
+                showLoading();
+
+                // Make API call to Gemini
+                fetchGeminiResponse(userMessage).then(response => {
+                    $('#chatboxBody').append('<p><strong>Baymax:</strong> ' + response + '</p>');
                     $('#chatboxBody').scrollTop($('#chatboxBody')[0].scrollHeight);
-                }, 1000);
+                    hideLoading(); // Hide loading indicator
+                }).catch(error => {
+                    $('#chatboxBody').append('<p><strong>Baymax:</strong> I’m sorry, there was an error. Please try again later.</p>');
+                    hideLoading(); // Hide loading indicator
+                });
             }
         });
+
+        // Function to show loading indicator
+        function showLoading() {
+            $('#loadingIndicator').show();
+        }
+
+        // Function to hide loading indicator
+        function hideLoading() {
+            $('#loadingIndicator').hide();
+        }
+
+        // Function to fetch response from Gemini API
+        async function fetchGeminiResponse(message) {
+            const apiKey = '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';  // Replace with your actual Gemini API key
+            const apiUrl = 'https://api.openai.com/v1/completions';  // Replace with the actual Gemini API endpoint
+
+            const requestBody = {
+                prompt: message,  // The user message sent to the Gemini model
+                max_tokens: 150,  // Limit the response length
+                temperature: 0.7, // Adjust the randomness of the response
+            };
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${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}`,
+                    },
+                    body: JSON.stringify(requestBody),
+                });
+
+                const data = await response.json();
+                if (data && data.response) {
+                    return data.response;  // Return Gemini's response to be displayed in the chatbox
+                } else {
+                    return 'I’m not sure how to respond to that.';
+                }
+            } catch (error) {
+                console.error('Error fetching from Gemini API:', error);
+                return 'There was an error processing your request.';
+            }
+        }
     </script>
 </body>
 </html>
