@@ -4,20 +4,108 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Safety Alerts</title>
+    <!-- Bootstrap 4 CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom Styles -->
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 800px;
+        }
+        .alert {
+            margin-bottom: 15px;
+        }
+        .filter-container {
+            margin-bottom: 20px;
+        }
+        .alert-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .alert-item {
+            transition: background-color 0.3s ease;
+        }
+        .alert-item:hover {
+            background-color: #f1f1f1;
+        }
+    </style>
 </head>
 <body>
     <div class="container text-center">
-        <h1 class="my-5">Safety Alerts</h1>
-        <p>Baymax's current safety alerts:</p>
-        <ul class="list-group">
-            {% for alert in alerts %}
-                <li class="list-group-item">
-                    <strong>{{ alert['type'] }}:</strong> {{ alert['status'] }}
-                </li>
-            {% endfor %}
-        </ul>
-        <a href="/" class="btn btn-primary mt-3">Back to Home</a>
+        <h1 class="my-5">Baymax Safety Alerts</h1>
+
+        <!-- Search and Filter Section -->
+        <div class="filter-container">
+            <div class="row">
+                <div class="col-md-6">
+                    <input type="text" class="form-control" id="search-bar" placeholder="Search alerts" onkeyup="filterAlerts()">
+                </div>
+                <div class="col-md-6">
+                    <select class="form-control" id="status-filter" onchange="filterAlerts()">
+                        <option value="">Filter by Status</option>
+                        <option value="Active">Active</option>
+                        <option value="Inactive">Inactive</option>
+                        <option value="Resolved">Resolved</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alerts List -->
+        <div class="alert-list">
+            <ul class="list-group">
+                {% for alert in alerts %}
+                    {% set alert_status = alert['status'] if alert['status'] else 'Active' %}  <!-- Default to 'Active' if no status -->
+                    <li class="list-group-item alert-item" data-status="{{ alert_status }}" data-type="{{ alert['type'] }}">
+                        <strong>{{ alert['type'] }}:</strong>
+                        <span class="badge badge-{{ alert_status | lower }}">{{ alert_status }}</span>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- Button to go back -->
+        <a href="/" class="btn btn-secondary mt-3">Back to Home</a>
     </div>
+
+    <!-- Bootstrap and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- Custom JavaScript -->
+    <script>
+        // Filter alerts based on search input and selected status
+        function filterAlerts() {
+            var searchValue = document.getElementById('search-bar').value.toLowerCase();
+            var statusValue = document.getElementById('status-filter').value.toLowerCase();
+            var alertItems = document.querySelectorAll('.alert-item');
+
+            alertItems.forEach(function(item) {
+                var alertType = item.dataset.type.toLowerCase();
+                var alertStatus = item.dataset.status.toLowerCase();
+
+                var matchesSearch = alertType.includes(searchValue);
+                var matchesStatus = statusValue ? alertStatus.includes(statusValue) : true;
+
+                if (matchesSearch && matchesStatus) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        // Function to show an alert when a new one is added (for demo purposes)
+        function showNewAlertNotification() {
+            alert("New safety alert has been added!");
+        }
+
+        // Trigger the new alert notification (you can call this when a new alert is added in real-time)
+        setTimeout(showNewAlertNotification, 5000);  // Simulate a new alert after 5 seconds
+    </script>
 </body>
 </html>
