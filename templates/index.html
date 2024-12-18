@@ -3,27 +3,145 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Baymax</title>
+    <title>Baymax - Your Personal Health Assistant</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f4f8fb;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .header {
+            background: #ff6f61;
+            color: white;
+            padding: 30px 0;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        .card {
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-body {
+            text-align: center;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .btn-lg {
+            font-size: 1.25rem;
+            padding: 15px 30px;
+            border-radius: 10px;
+        }
+
+        .cta-button {
+            background-color: #4caf50;
+            color: white;
+            border-radius: 50px;
+            padding: 12px 25px;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+
+        .cta-button:hover {
+            background-color: #45a049;
+            transform: scale(1.05);
+        }
+
+        .cta-button:focus {
+            outline: none;
+        }
+
+        .footer {
+            background: #ff6f61;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .footer a {
+            color: white;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-    <div class="container text-center">
-        <h1 class="my-5">Welcome to Baymax!</h1>
-        <p>Your personal health assistant. Choose a function:</p>
-        <div class="row">
+
+    <div class="header text-center">
+        <h1>Welcome to Baymax!</h1>
+        <p>Your personal health assistant. Choose a function to get started.</p>
+    </div>
+
+    <div class="container mt-5">
+        <div class="row text-center">
             <div class="col-md-4">
-                <a href="/health_check" class="btn btn-primary btn-lg">Health Check</a>
+                <div class="card">
+                    <div class="card-body">
+                        <i class="fas fa-heartbeat fa-3x mb-3"></i>
+                        <h5 class="card-title">Health Check</h5>
+                        <p>Get your health status and vital stats. Baymax is here to help!</p>
+                        <a href="/health_check" class="btn btn-primary btn-lg">Start Health Check</a>
+                    </div>
+                </div>
             </div>
             <div class="col-md-4">
-                <a href="/emotion" class="btn btn-success btn-lg">Emotion Recognition</a>
+                <div class="card">
+                    <div class="card-body">
+                        <i class="fas fa-smile fa-3x mb-3"></i>
+                        <h5 class="card-title">Emotion Recognition</h5>
+                        <p>Track your mental health and receive personalized advice from Baymax.</p>
+                        <a href="/emotion" class="btn btn-success btn-lg">Check My Mood</a>
+                    </div>
+                </div>
             </div>
             <div class="col-md-4">
-                <a href="/safety_alert" class="btn btn-warning btn-lg">Safety Alerts</a>
+                <div class="card">
+                    <div class="card-body">
+                        <i class="fas fa-exclamation-triangle fa-3x mb-3"></i>
+                        <h5 class="card-title">Safety Alerts</h5>
+                        <p>Get real-time safety updates and stay informed about potential risks.</p>
+                        <a href="/safety_alert" class="btn btn-warning btn-lg">Check Alerts</a>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="mt-4">
-            <a href="/physical_interaction" class="btn btn-info btn-lg">Physical Interaction</a>
+
+        <div class="text-center mt-5">
+            <a href="/physical-interaction" class="cta-button">Go to Physical Interaction</a>
         </div>
     </div>
+
+    <div class="footer">
+        <p>Powered by Baymax. A caring healthcare assistant for your well-being.</p>
+        <p><a href="https://www.baymax.com">Learn more about Baymax</a></p>
+    </div>
+
 </body>
 </html>

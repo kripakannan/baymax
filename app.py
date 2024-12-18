@@ -57,6 +57,36 @@ def generate_baymax_response(rating):
         }
     return response
 
+# Route for Physical Interaction Page
+@app.route('/physical-interaction')
+def physical_interaction():
+    return render_template('physical_interaction.html')
+
+# Route for Hugging Baymax
+@app.route('/hug_baymax')
+def hug_baymax():
+    # Placeholder for Hug action logic
+    response = {
+        "message": "Baymax is giving you a big hug! 🤗",
+        "animation": "hug_animation.gif"  # Link to an actual hug animation
+    }
+    return jsonify(response)
+
+# Route for Talking to Baymax
+@app.route('/talk_to_baymax')
+def talk_to_baymax():
+    # Placeholder for Talk action logic
+    responses = [
+        "Hello! How can I assist you today?",
+        "I'm here to help you feel better. What can I do for you?",
+        "Don't worry, I am Baymax, your personal healthcare companion."
+    ]
+    response = {
+        "message": random.choice(responses),
+        "sound": "baymax_voice.mp3"  # Placeholder for actual audio file
+    }
+    return jsonify(response)
+
 # Breathing Exercise route
 @app.route('/breathing', methods=['GET'])
 def breathing():
@@ -69,12 +99,6 @@ def safety_alert():
     # Dummy safety data
     alerts = [{'type': 'Fire', 'status': 'No Risk'}, {'type': 'Gas Leak', 'status': 'Risk Detected'}]
     return render_template('safety_alert.html', alerts=alerts)
-
-# Physical Interaction (Dummy interaction page)
-@app.route('/physical_interaction')
-def physical_interaction():
-    # Dummy interaction buttons, replace with actual functionality
-    return render_template('physical_interaction.html')
 
 if __name__ == '__main__':
     app.run(debug=True)

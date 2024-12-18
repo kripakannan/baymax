@@ -5,16 +5,56 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Physical Interaction</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
     <div class="container text-center">
         <h1 class="my-5">Physical Interaction</h1>
         <p>Press a button to interact with Baymax!</p>
         <div class="d-flex justify-content-center">
-            <button class="btn btn-primary mx-3">Hug Baymax</button>
-            <button class="btn btn-success mx-3">Talk to Baymax</button>
+            <button class="btn btn-primary mx-3" id="hugButton">Hug Baymax</button>
+            <button class="btn btn-success mx-3" id="talkButton">Talk to Baymax</button>
         </div>
+
+        <div id="interactionMessage" class="mt-4"></div>
+        <div id="baymaxAnimation" class="mt-4">
+            <!-- Animation or Image will be shown here -->
+        </div>
+        <div id="baymaxAudio" class="mt-4">
+            <!-- Audio response will be played here -->
+        </div>
+
         <a href="/" class="btn btn-primary mt-3">Back to Home</a>
     </div>
+
+    <script>
+        // Handle Hug Baymax button click
+        $('#hugButton').click(function() {
+            $.ajax({
+                url: '/hug_baymax',
+                type: 'GET',
+                success: function(response) {
+                    // Display Baymax's hug message
+                    $('#interactionMessage').text(response.message);
+                    $('#baymaxAnimation').html('<img src="/static/images/' + response.animation + '" alt="Baymax Hug" class="img-fluid">');
+                    $('#baymaxAudio').html('');
+                }
+            });
+        });
+
+        // Handle Talk to Baymax button click
+        $('#talkButton').click(function() {
+            $.ajax({
+                url: '/talk_to_baymax',
+                type: 'GET',
+                success: function(response) {
+                    // Display Baymax's message
+                    $('#interactionMessage').text(response.message);
+                    $('#baymaxAnimation').html('');
+                    $('#baymaxAudio').html('<audio controls autoplay><source src="/static/audio/' + response.sound + '" type="audio/mp3"></audio>');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
