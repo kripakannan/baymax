@@ -5,23 +5,93 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Emotion Recognition</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div class="container text-center">
-        <h1 class="my-5">Emotion Recognition</h1>
-        <p>Baymax's current emotion:</p>
-        <div class="card mb-3">
-            <div class="card-body">
-                <h3>{{ current_emotion }}</h3>
+        <h1 class="my-5">Rate Your Mental Health</h1>
+
+        <!-- Mood rating form -->
+        <form action="/emotion" method="POST">
+            <label for="rating" class="form-label">How are you feeling today?</label>
+            <input type="number" id="rating" name="rating" class="form-control" min="1" max="10" required>
+            <button type="submit" class="btn btn-primary mt-3">Submit Rating</button>
+        </form>
+
+        {% if rating %}
+            <div class="mt-4">
+                <h3>Your Mood Rating: {{ rating }}</h3>
+                <p>{{ response.message }}</p>
+                <img src="{{ url_for('static', filename='images/' + response.animation) }}" alt="Baymax Animation" class="mt-3">
             </div>
-        </div>
-        <p>Possible emotions:</p>
-        <ul>
-            {% for emotion in emotions %}
-                <li>{{ emotion }}</li>
+        {% endif %}
+
+        <hr>
+
+        <!-- List of Mental Health Resources -->
+        <h3 class="mt-5">Mental Health Resources</h3>
+        <ul class="list-group">
+            {% for resource in resources %}
+                <li class="list-group-item">
+                    <a href="{{ resource.link }}" target="_blank">{{ resource.name }}</a>
+                </li>
             {% endfor %}
         </ul>
-        <a href="/" class="btn btn-primary mt-3">Back to Home</a>
+
+        <hr>
+
+        <!-- Mood Tracking Chart -->
+        <h3 class="mt-5">Mood Check-ins Over Time</h3>
+        <canvas id="moodChart" width="400" height="200"></canvas>
+
+        <hr>
+
+        <a href="/breathing" class="btn btn-info mt-3">Take a Breathing Exercise</a>
     </div>
+
+    <script>
+        // Generate a chart to display mood tracking data
+        var moodData = {{ mood_data|tojson }};
+        var labels = moodData.map(function(item) {
+            return item.timestamp.split(' ')[0];  // Just date part for simplicity
+        });
+        var data = moodData.map(function(item) {
+            return item.rating;
+        });
+
+        var ctx = document.getElementById('moodChart').getContext('2d');
+        var moodChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Mood Rating Over Time',
+                    data: data,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1,
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Date'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Mood Rating'
+                        },
+                        min: 1,
+                        max: 10
+                    }
+                }
+            }
+        });
+    </script>
 </body>
 </html>

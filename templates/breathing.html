@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Breathing Exercise</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container text-center">
+        <h1 class="my-5">Breathing Exercise</h1>
+        <p>Take a moment for yourself. Breathe in for 4 seconds, hold for 4 seconds, breathe out for 4 seconds.</p>
+
+        <div id="timer" class="my-4" style="font-size: 2rem;">1:00</div>
+
+        <button class="btn btn-success mt-4" id="startBtn">Start Breathing Exercise</button>
+
+        <p class="mt-5">Remember, it's important to take breaks and focus on your well-being.</p>
+    </div>
+
+    <script>
+        let timer;
+        let seconds = 60;
+
+        document.getElementById("startBtn").addEventListener("click", function() {
+            this.disabled = true;
+            timer = setInterval(function() {
+                seconds--;
+                let minutes = Math.floor(seconds / 60);
+                let remainingSeconds = seconds % 60;
+                document.getElementById("timer").innerText = `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+
+                if (seconds <= 0) {
+                    clearInterval(timer);
+                    alert("Good job! You've completed your breathing exercise.");
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
