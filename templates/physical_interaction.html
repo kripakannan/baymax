@@ -4,56 +4,217 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Physical Interaction</title>
+    <!-- Bootstrap 4 CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+    <style>
+        body {
+            background-color: #f1f3f5;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .container {
+            max-width: 900px;
+            margin-top: 50px;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            font-size: 2.5rem;
+            color: #343a40;
+        }
+        .btn-custom {
+            font-size: 1.1rem;
+            padding: 15px 30px;
+            border-radius: 50px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        .btn-custom:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+        .btn-custom:focus {
+            outline: none;
+        }
+        #interactionMessage {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #495057;
+            margin-top: 20px;
+        }
+        #baymaxAnimation img {
+            max-width: 100%;
+            max-height: 300px;
+            margin-top: 20px;
+            transition: transform 0.5s ease;
+        }
+        #baymaxAudio audio {
+            margin-top: 20px;
+            width: 100%;
+        }
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 2s linear infinite;
+            margin-top: 20px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .chatbox {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 300px;
+            height: 400px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            display: none;
+            z-index: 999;
+        }
+        .chatbox-header {
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        .chatbox-body {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 10px;
+        }
+        .chatbox-footer {
+            display: flex;
+            margin-top: 10px;
+        }
+        .chatbox-footer input {
+            flex: 1;
+            padding: 10px;
+            border-radius: 20px;
+            border: 1px solid #ddd;
+            margin-right: 10px;
+        }
+        .chatbox-footer button {
+            padding: 10px 20px;
+            border-radius: 20px;
+            background-color: #0056b3;
+            color: white;
+            border: none;
+        }
+    </style>
 </head>
 <body>
     <div class="container text-center">
-        <h1 class="my-5">Physical Interaction</h1>
-        <p>Press a button to interact with Baymax!</p>
-        <div class="d-flex justify-content-center">
-            <button class="btn btn-primary mx-3" id="hugButton">Hug Baymax</button>
-            <button class="btn btn-success mx-3" id="talkButton">Talk to Baymax</button>
+        <h1>Physical Interaction with Baymax</h1>
+        <p class="lead">Press a button to interact with Baymax!</p>
+
+        <div class="d-flex justify-content-center mb-4">
+            <button class="btn btn-primary btn-custom mx-3" id="hugButton"><i class="fas fa-hug"></i> Hug Baymax</button>
+            <button class="btn btn-success btn-custom mx-3" id="talkButton"><i class="fas fa-comment-dots"></i> Talk to Baymax</button>
         </div>
 
-        <div id="interactionMessage" class="mt-4"></div>
-        <div id="baymaxAnimation" class="mt-4">
-            <!-- Animation or Image will be shown here -->
-        </div>
-        <div id="baymaxAudio" class="mt-4">
-            <!-- Audio response will be played here -->
-        </div>
+        <!-- Feedback Messages -->
+        <div id="interactionMessage"></div>
 
-        <a href="/" class="btn btn-primary mt-3">Back to Home</a>
+        <!-- Baymax Animation or Image -->
+        <div id="baymaxAnimation"></div>
+
+        <!-- Audio response -->
+        <div id="baymaxAudio"></div>
+
+        <!-- Loading Indicator -->
+        <div id="loadingIndicator" class="loader" style="display: none;"></div>
+
+        <!-- Back Button -->
+        <a href="/" class="btn btn-secondary btn-custom mt-4">Back to Home</a>
+    </div>
+
+    <!-- Chatbox -->
+    <div id="chatbox" class="chatbox">
+        <div class="chatbox-header">Baymax Chat</div>
+        <div id="chatboxBody" class="chatbox-body">
+            <p><strong>Baymax:</strong> Hi, I'm Baymax! How can I help you today?</p>
+        </div>
+        <div class="chatbox-footer">
+            <input type="text" id="chatInput" placeholder="Type your message..." />
+            <button id="sendMessage">Send</button>
+        </div>
     </div>
 
     <script>
-        // Handle Hug Baymax button click
+        // Function to show loading indicator
+        function showLoading() {
+            $('#loadingIndicator').show();
+            $('#interactionMessage').text('Please wait...');
+            $('#baymaxAnimation').html('');
+            $('#baymaxAudio').html('');
+        }
+
+        // Function to hide loading indicator
+        function hideLoading() {
+            $('#loadingIndicator').hide();
+        }
+
+        // Toggle Hug Baymax button state (Hide gif if clicked again)
+        let isHugged = false;
         $('#hugButton').click(function() {
-            $.ajax({
-                url: '/hug_baymax',
-                type: 'GET',
-                success: function(response) {
-                    // Display Baymax's hug message
-                    $('#interactionMessage').text(response.message);
-                    $('#baymaxAnimation').html('<img src="/static/images/' + response.animation + '" alt="Baymax Hug" class="img-fluid">');
-                    $('#baymaxAudio').html('');
-                }
-            });
+            if (isHugged) {
+                $('#baymaxAnimation').html('');
+                $('#interactionMessage').text('');
+                isHugged = false;
+            } else {
+                showLoading();
+                $.ajax({
+                    url: '/hug_baymax',
+                    type: 'GET',
+                    success: function(response) {
+                        hideLoading();
+                        $('#interactionMessage').text(response.message);
+                        $('#baymaxAnimation').html('<img src="/static/images/' + response.animation + '" alt="Baymax Hug" class="img-fluid">');
+                        $('#baymaxAudio').html('');
+                        isHugged = true;
+                    },
+                    error: function() {
+                        hideLoading();
+                        $('#interactionMessage').text('Something went wrong. Please try again later.');
+                    }
+                });
+            }
         });
 
         // Handle Talk to Baymax button click
         $('#talkButton').click(function() {
-            $.ajax({
-                url: '/talk_to_baymax',
-                type: 'GET',
-                success: function(response) {
-                    // Display Baymax's message
-                    $('#interactionMessage').text(response.message);
-                    $('#baymaxAnimation').html('');
-                    $('#baymaxAudio').html('<audio controls autoplay><source src="/static/audio/' + response.sound + '" type="audio/mp3"></audio>');
-                }
-            });
+            $('#chatbox').fadeIn(); // Show chatbox
+            $('#chatInput').focus(); // Focus on input
+        });
+
+        // Handle sending message in the chatbox
+        $('#sendMessage').click(function() {
+            let userMessage = $('#chatInput').val();
+            if (userMessage) {
+                $('#chatboxBody').append('<p><strong>You:</strong> ' + userMessage + '</p>');
+                $('#chatInput').val('');
+                $('#chatboxBody').scrollTop($('#chatboxBody')[0].scrollHeight);
+
+                // Simulate Baymax response (replace with actual chatbot logic)
+                setTimeout(function() {
+                    $('#chatboxBody').append('<p><strong>Baymax:</strong> You said: ' + userMessage + '</p>');
+                    $('#chatboxBody').scrollTop($('#chatboxBody')[0].scrollHeight);
+                }, 1000);
+            }
         });
     </script>
 </body>
