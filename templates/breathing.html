@@ -5,36 +5,160 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Breathing Exercise</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f0f8ff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            margin-top: 50px;
+        }
+        .header {
+            color: #333;
+            font-weight: 700;
+            margin-bottom: 30px;
+        }
+        .btn-custom {
+            background-color: #28a745;
+            color: white;
+            border-radius: 30px;
+            padding: 12px 25px;
+            transition: background-color 0.3s ease;
+        }
+        .btn-custom:hover {
+            background-color: #218838;
+        }
+        #timer {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #e7f9e7;
+            width: 150px;
+            margin-left: auto;
+            margin-right: auto;
+            transition: background-color 0.5s ease;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #f4f8fc;
+            margin-top: 40px;
+        }
+    </style>
 </head>
 <body>
-    <div class="container text-center">
-        <h1 class="my-5">Breathing Exercise</h1>
-        <p>Take a moment for yourself. Breathe in for 4 seconds, hold for 4 seconds, breathe out for 4 seconds.</p>
+    <div class="container">
+        <h1 class="header text-center">Breathing Exercise</h1>
+        <p class="text-center">Take a moment for yourself. Breathe in for 4 seconds, hold for 4 seconds, breathe out for 4 seconds.</p>
 
-        <div id="timer" class="my-4" style="font-size: 2rem;">1:00</div>
+        <div id="instructions" class="my-4" style="font-size: 1.5rem;">Get Ready!</div>
 
-        <button class="btn btn-success mt-4" id="startBtn">Start Breathing Exercise</button>
+        <div id="timer" class="my-4">1:00</div>
+
+        <button class="btn btn-custom mt-4" id="startBtn">Start Breathing Exercise</button>
+        <button class="btn btn-secondary mt-4" id="resetBtn" style="display:none;">Reset</button>
 
         <p class="mt-5">Remember, it's important to take breaks and focus on your well-being.</p>
+    </div>
+
+    <div class="footer">
+        <p>&copy; 2024 Breathing Exercise. All Rights Reserved.</p>
     </div>
 
     <script>
         let timer;
         let seconds = 60;
+        let phase = "breatheIn"; // "breatheIn", "hold", "breatheOut"
+        let countdownActive = false;
 
+        // Sound effect for each phase
+        const beep = new Audio('https://www.soundjay.com/button/beep-07.wav');
+
+        // Update Timer Function
+        function updateTimer() {
+            let minutes = Math.floor(seconds / 60);
+            let remainingSeconds = seconds % 60;
+            document.getElementById("timer").innerText = `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+        }
+
+        // Breathing Instruction Phase Update
+        function updateInstruction() {
+            let instructionText = "";
+            let bgColor = "#e7f9e7"; // Default green color
+            switch (phase) {
+                case "breatheIn":
+                    instructionText = "Breathe In!";
+                    bgColor = "#cce5ff"; // Light blue for breathing in
+                    break;
+                case "hold":
+                    instructionText = "Hold!";
+                    bgColor = "#fff3cd"; // Light yellow for holding breath
+                    break;
+                case "breatheOut":
+                    instructionText = "Breathe Out!";
+                    bgColor = "#f8d7da"; // Light red for breathing out
+                    break;
+            }
+            document.getElementById("instructions").innerText = instructionText;
+            document.getElementById("timer").style.backgroundColor = bgColor;
+        }
+
+        // Start the breathing exercise
         document.getElementById("startBtn").addEventListener("click", function() {
             this.disabled = true;
+            countdownActive = true;
+            document.getElementById("resetBtn").style.display = "inline-block";
+
             timer = setInterval(function() {
+                if (!countdownActive) {
+                    clearInterval(timer);
+                    return;
+                }
+
                 seconds--;
-                let minutes = Math.floor(seconds / 60);
-                let remainingSeconds = seconds % 60;
-                document.getElementById("timer").innerText = `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+                updateTimer();
 
                 if (seconds <= 0) {
-                    clearInterval(timer);
-                    alert("Good job! You've completed your breathing exercise.");
+                    phase = "breatheIn";  // Start new cycle
+                    seconds = 4; // Reset for next phase (4 seconds per phase)
+                    beep.play(); // Play sound to indicate transition
+
+                    if (document.getElementById("instructions").innerText === "Breathe Out!") {
+                        clearInterval(timer);
+                        alert("Good job! You've completed your breathing exercise.");
+                        document.getElementById("startBtn").disabled = false;  // Allow restart
+                        return;
+                    }
+
+                    updateInstruction();
+
+                    // Switch to the next phase
+                    if (phase === "breatheIn") {
+                        phase = "hold";
+                    } else if (phase === "hold") {
+                        phase = "breatheOut";
+                    } else {
+                        phase = "breatheIn";
+                    }
                 }
             }, 1000);
+        });
+
+        // Reset the exercise
+        document.getElementById("resetBtn").addEventListener("click", function() {
+            clearInterval(timer);
+            seconds = 60;
+            phase = "breatheIn";
+            document.getElementById("instructions").innerText = "Get Ready!";
+            updateTimer();
+            document.getElementById("resetBtn").style.display = "none";
+            document.getElementById("startBtn").disabled = false;
         });
     </script>
 </body>
