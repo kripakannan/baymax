@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emotion Recognition</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container text-center">
+        <h1 class="my-5">Emotion Recognition</h1>
+        <p>Baymax's current emotion:</p>
+        <div class="card mb-3">
+            <div class="card-body">
+                <h3>{{ current_emotion }}</h3>
+            </div>
+        </div>
+        <p>Possible emotions:</p>
+        <ul>
+            {% for emotion in emotions %}
+                <li>{{ emotion }}</li>
+            {% endfor %}
+        </ul>
+        <a href="/" class="btn btn-primary mt-3">Back to Home</a>
+    </div>
+</body>
+</html>

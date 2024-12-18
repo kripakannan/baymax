@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Safety Alerts</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container text-center">
+        <h1 class="my-5">Safety Alerts</h1>
+        <p>Baymax's current safety alerts:</p>
+        <ul class="list-group">
+            {% for alert in alerts %}
+                <li class="list-group-item">
+                    <strong>{{ alert['type'] }}:</strong> {{ alert['status'] }}
+                </li>
+            {% endfor %}
+        </ul>
+        <a href="/" class="btn btn-primary mt-3">Back to Home</a>
+    </div>
+</body>
+</html>

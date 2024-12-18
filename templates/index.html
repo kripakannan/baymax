@@ -3,10 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flask App</title>
+    <title>Baymax</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <h1>Welcome to Flask!</h1>
-    <p>Use the API at <code>/api/hello</code>.</p>
+    <div class="container text-center">
+        <h1 class="my-5">Welcome to Baymax!</h1>
+        <p>Your personal health assistant. Choose a function:</p>
+        <div class="row">
+            <div class="col-md-4">
+                <a href="/health_check" class="btn btn-primary btn-lg">Health Check</a>
+            </div>
+            <div class="col-md-4">
+                <a href="/emotion" class="btn btn-success btn-lg">Emotion Recognition</a>
+            </div>
+            <div class="col-md-4">
+                <a href="/safety_alert" class="btn btn-warning btn-lg">Safety Alerts</a>
+            </div>
+        </div>
+        <div class="mt-4">
+            <a href="/physical_interaction" class="btn btn-info btn-lg">Physical Interaction</a>
+        </div>
+    </div>
 </body>
 </html>
