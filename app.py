@@ -97,6 +97,10 @@ def physical_interaction():
 def character_customization():
     return render_template('character_customization.html')
 
+@app.route('/wellness-rewards')
+def wellness_rewards():
+    return render_template('wellness_rewards.html')
+
 # Route for Hugging Baymax
 @app.route('/hug_baymax')
 def hug_baymax():
