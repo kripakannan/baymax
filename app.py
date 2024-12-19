@@ -1,8 +1,13 @@
 from flask import Flask, render_template, request, jsonify
+from flask_cors import CORS
 from datetime import datetime
+from flask import redirect, url_for
 import json
 
 app = Flask(__name__)
+
+# Enable CORS for all routes
+CORS(app)
 
 # Store user data in memory (In a real app, use a database)
 mood_data = []  # List to store mood ratings (In-memory example)
@@ -11,6 +16,17 @@ resources = [
     {"name": "Mental Health America", "link": "https://www.mhanational.org/"},
     {"name": "Crisis Text Line", "link": "https://www.crisistextline.org/"},
 ]
+
+# Medication schedule (mock data structure for testing)
+medication_schedule = {
+    "Monday": [],
+    "Tuesday": [],
+    "Wednesday": [],
+    "Thursday": [],
+    "Friday": [],
+    "Saturday": [],
+    "Sunday": []
+}
 
 # Home page
 @app.route('/')
@@ -56,6 +72,21 @@ def generate_baymax_response(rating):
             "animation": "happy_animation.gif"
         }
     return response
+
+
+@app.route("/medication", methods=["GET", "POST"])
+def medication():
+    if request.method == "POST":
+        name = request.form["name"]
+        time = request.form["time"]
+        days = request.form.getlist("days")
+
+        # Add medication to the selected days
+        for day in days:
+            medication_schedule[day].append({"name": name, "time": time})
+        return redirect(url_for("medication"))
+
+    return render_template("medication.html", medication_schedule=medication_schedule)
 
 # Route for Physical Interaction Page
 @app.route('/physical-interaction')
