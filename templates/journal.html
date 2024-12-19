@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emotional Journaling</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background: #f0f8ff;
+            font-family: Arial, sans-serif;
+        }
+        .emotion-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 50px;
+        }
+        .emotion {
+            margin: 10px;
+            padding: 20px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s ease;
+            background: #fff;
+        }
+        .emotion:hover {
+            transform: scale(1.1);
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .envelope {
+            width: 80px;
+            height: 50px;
+            background: #ffd700;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            position: relative;
+            margin: 20px auto;
+        }
+        .envelope:before {
+            content: '';
+            width: 100%;
+            height: 25px;
+            background: #ffecb3;
+            position: absolute;
+            top: -25px;
+            left: 0;
+            transform: skewY(-20deg);
+        }
+        .quote-box {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 1.2rem;
+            color: #333;
+            display: none;
+        }
+        .notebook {
+            margin: 50px auto;
+            width: 80%;
+            max-width: 600px;
+            background: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+        }
+        .notebook-header {
+            text-align: center;
+            font-size: 1.5rem;
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+        .prompt {
+            margin: 20px 0;
+            font-size: 1.2rem;
+            color: #555;
+        }
+        /* Add your styles for the sidebar */
+        .sidebar {
+            width: 250px;
+            background-color: #333;
+            color: white;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding-top: 20px;
+        }
+        .sidebar a {
+            display: block;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            font-size: 18px;
+        }
+        .sidebar a:hover {
+            background-color: #575757;
+        }
+        .journal-input {
+            width: 100%;
+            min-height: 150px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 10px;
+            font-size: 1rem;
+        }
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="sidebar-container"></div>
+    <div class="emotion-container">
+        <div class="emotion" id="sad">
+            <div class="envelope"></div>
+            <p>When You Are Sad</p>
+        </div>
+        <div class="emotion" id="happy">
+            <div class="envelope"></div>
+            <p>When You Are Happy</p>
+        </div>
+        <div class="emotion" id="stressed">
+            <div class="envelope"></div>
+            <p>When You Are Stressed</p>
+        </div>
+    </div>
+
+    <div class="quote-box" id="quote-box"></div>
+
+    <div class="notebook">
+        <div class="notebook-header">Virtual Journal</div>
+        <div class="prompt" id="prompt">Prompt 1: What are three things you are grateful for today?</div>
+        <textarea class="journal-input" id="journal-input"></textarea>
+        <div class="navigation-buttons">
+            <button class="btn btn-primary" id="prev">Previous</button>
+            <button class="btn btn-primary" id="next">Next</button>
+        </div>
+    </div>
+
+    <script>
+        fetch('/templates/sidebar.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('sidebar-container').innerHTML = data;
+            });
+        // Quotes data
+        const quotes = {
+            sad: [
+                "Every storm runs out of rain.",
+                "Keep your face to the sunshine and you cannot see a shadow.",
+                "This too shall pass."
+            ],
+            happy: [
+                "Happiness is not by chance, but by choice.",
+                "Enjoy the little things, for one day you may look back and realize they were the big things.",
+                "The purpose of our lives is to be happy."
+            ],
+            stressed: [
+                "Take a deep breath and relax.",
+                "The greatest weapon against stress is our ability to choose one thought over another.",
+                "Relaxation is the key to mental health."
+            ]
+        };
+
+        // Prompts data
+        const prompts = [
+            "What are three things you are grateful for today?",
+            "Write about a moment that made you laugh recently.",
+            "What is a challenge you overcame, and how did you do it?"
+        ];
+
+        // Current page tracking
+        let currentPage = 0;
+
+        // Emotion click handlers
+        document.querySelectorAll('.emotion').forEach(emotion => {
+            emotion.addEventListener('click', () => {
+                const emotionId = emotion.id;
+                const randomQuote = quotes[emotionId][Math.floor(Math.random() * quotes[emotionId].length)];
+                const quoteBox = document.getElementById('quote-box');
+                quoteBox.innerText = randomQuote;
+                quoteBox.style.display = 'block';
+            });
+        });
+
+        // Notebook navigation
+        document.getElementById('prev').addEventListener('click', () => {
+            if (currentPage > 0) {
+                savePage();
+                currentPage--;
+                loadPage();
+            }
+        });
+
+        document.getElementById('next').addEventListener('click', () => {
+            if (currentPage < prompts.length - 1) {
+                savePage();
+                currentPage++;
+                loadPage();
+            }
+        });
+
+        // Save page data to localStorage
+        function savePage() {
+            const input = document.getElementById('journal-input').value;
+            localStorage.setItem(`journal-${currentPage}`, input);
+        }
+
+        // Load page data from localStorage
+        function loadPage() {
+            const prompt = document.getElementById('prompt');
+            const input = document.getElementById('journal-input');
+            prompt.innerText = `Prompt ${currentPage + 1}: ${prompts[currentPage]}`;
+            input.value = localStorage.getItem(`journal-${currentPage}`) || '';
+        }
+
+        // Initial load
+        loadPage();
+    </script>
+</body>
+</html>

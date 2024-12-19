@@ -94,6 +94,10 @@ def medication():
 def physical_interaction():
     return render_template('physical_interaction.html')
 
+@app.route('/journal')
+def journal():
+    return render_template('journal.html')
+
 @app.route('/templates/<path:filename>')
 def fetch_template(filename):
     return send_from_directory('templates', filename)
