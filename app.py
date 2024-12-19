@@ -1,17 +1,15 @@
-from flask import Flask, render_template, request, jsonify, session
+from flask import Flask, render_template, request, jsonify
 from flask_cors import CORS
 from datetime import datetime
 from flask import redirect, url_for
 from flask import send_from_directory
 import os
-from flask_oauthlib.client import OAuth
-from flask_dance.contrib.google import make_google_blueprint, google
 import json
 
 app = Flask(__name__)
 
-google_bp = make_google_blueprint(client_id='261828572822-si0pqla296acbhb2qufnu28r4r4l93d1.apps.googleusercontent.com', client_secret='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', redirect_to='authorized')
-app.register_blueprint(google_bp, url_prefix='/google')
+# google_bp = make_google_blueprint(client_id='261828572822-si0pqla296acbhb2qufnu28r4r4l93d1.apps.googleusercontent.com', client_secret='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', redirect_to='authorized')
+# app.register_blueprint(google_bp, url_prefix='/google')
 
 # Enable CORS for all routes
 CORS(app)
@@ -36,49 +34,49 @@ medication_schedule = {
 }
 
 # OAuth Configuration
-app.secret_key = os.urandom(24)
-app.config['261828572822-si0pqla296acbhb2qufnu28r4r4l93d1.apps.googleusercontent.com'] = '<your-google-client-id>'
-app.config['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'] = '<your-google-client-secret>'
+# app.secret_key = os.urandom(24)
+# app.config['261828572822-si0pqla296acbhb2qufnu28r4r4l93d1.apps.googleusercontent.com'] = '<your-google-client-id>'
+# app.config['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'] = '<your-google-client-secret>'
 
-oauth = OAuth(app)
+# oauth = OAuth(app)
 
-google = oauth.register(
-    'google',
-    client_id=app.config['261828572822-si0pqla296acbhb2qufnu28r4r4l93d1.apps.googleusercontent.com'],
-    client_secret=app.config['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'],
-    authorize_url='https://accounts.google.com/o/oauth2/auth',
-    authorize_params=None,
-    access_token_url='https://accounts.google.com/o/oauth2/token',
-    refresh_token_url=None,
-    api_base_url='https://www.googleapis.com/oauth2/v1/',
-    client_kwargs={'scope': 'openid profile email'},
-)
+# google = oauth.register(
+    # 'google',
+    # client_id=app.config['261828572822-si0pqla296acbhb2qufnu28r4r4l93d1.apps.googleusercontent.com'],
+    # client_secret=app.config['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'],
+    # authorize_url='https://accounts.google.com/o/oauth2/auth',
+    # authorize_params=None,
+    # access_token_url='https://accounts.google.com/o/oauth2/token',
+    # refresh_token_url=None,
+    # api_base_url='https://www.googleapis.com/oauth2/v1/',
+    # client_kwargs={'scope': 'openid profile email'},
+# )
 
-@app.route('/')
-def index():
-    if 'google_token' in session:
-        user_info = google.get('userinfo')
-        return f'Logged in as: {user_info.json()["email"]}'
-    return redirect(url_for('login'))
+# @app.route('/')
+# def index():
+    # if 'google_token' in session:
+        # user_info = google.get('userinfo')
+        # return f'Logged in as: {user_info.json()["email"]}'
+    # return redirect(url_for('login'))
 
-@app.route('/login')
-def login():
-    if not google.authorized:
-        return redirect(url_for('google.login'))
-    user_info = google.get('/plus/v1/people/me')
-    return f'Logged in as: {user_info.json()["displayName"]}'
+# @app.route('/login')
+# def login():
+    # if not google.authorized:
+        # return redirect(url_for('google.login'))
+    # user_info = google.get('/plus/v1/people/me')
+    # return f'Logged in as: {user_info.json()["displayName"]}'
 
-@app.route('/logout')
-def logout():
-    session.pop('google_token', None)
-    return redirect(url_for('index'))
+# @app.route('/logout')
+# def logout():
+    # session.pop('google_token', None)
+    # return redirect(url_for('index'))
 
-@app.route('/login/authorized')
-def authorized():
-    google.authorize_access_token()
-    user_info = google.get('userinfo')
-    session['google_token'] = google.token
-    return redirect(url_for('index'))
+# @app.route('/login/authorized')
+# def authorized():
+    # google.authorize_access_token()
+    # user_info = google.get('userinfo')
+    # session['google_token'] = google.token
+    # return redirect(url_for('index'))
 
 # Home page
 @app.route('/')
@@ -148,6 +146,10 @@ def physical_interaction():
 @app.route('/journal')
 def journal():
     return render_template('journal.html')
+
+@app.route('/community')
+def community():
+    return render_template('community.html')
 
 @app.route('/templates/<path:filename>')
 def fetch_template(filename):
