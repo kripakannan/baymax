@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, jsonify
 from flask_cors import CORS
 from datetime import datetime
 from flask import redirect, url_for
+from flask import send_from_directory
 import json
 
 app = Flask(__name__)
@@ -92,6 +93,14 @@ def medication():
 @app.route('/physical-interaction')
 def physical_interaction():
     return render_template('physical_interaction.html')
+
+@app.route('/templates/<path:filename>')
+def fetch_template(filename):
+    return send_from_directory('templates', filename)
+
+@app.route('/sidebar')
+def sidebar():
+    return render_template('sidebar.html')
 
 @app.route('/character-customization')
 def character_customization():

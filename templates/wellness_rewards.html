@@ -72,6 +72,27 @@
             align-items: center;
             margin-top: 30px;
         }
+        /* Add your styles for the sidebar */
+        .sidebar {
+            width: 250px;
+            background-color: #333;
+            color: white;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding-top: 20px;
+        }
+        .sidebar a {
+            display: block;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            font-size: 18px;
+        }
+        .sidebar a:hover {
+            background-color: #575757;
+        }
         .badge {
             background-color: #28a745;
             color: white;
@@ -107,6 +128,8 @@
 </head>
 <body>
 
+<div id="sidebar-container"></div>
+
 <div class="container">
     <h1>Wellness Rewards</h1>
 
@@ -141,6 +164,11 @@
 </div>
 
 <script>
+    fetch('/templates/sidebar.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('sidebar-container').innerHTML = data;
+            });
     // Initialize progress values
     let steps = 0;
     let hydration = 0;

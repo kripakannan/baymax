@@ -13,37 +13,26 @@
             display: flex;
         }
 
-        /* Sidebar Styles */
+        /* Add your styles for the sidebar */
         .sidebar {
             width: 250px;
-            height: 100vh;
             background-color: #333;
             color: white;
+            height: 100vh;
             position: fixed;
             top: 0;
             left: 0;
-            padding-top: 50px;
-            padding-left: 20px;
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            padding-top: 20px;
         }
-
         .sidebar a {
             display: block;
             color: white;
+            padding: 10px 20px;
             text-decoration: none;
             font-size: 18px;
-            margin-bottom: 20px;
-            padding: 10px;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
         }
-
         .sidebar a:hover {
-            background-color: #555;
-        }
-
-        .sidebar i {
-            margin-right: 10px;
+            background-color: #575757;
         }
 
         /* Main Content Area */
@@ -82,16 +71,7 @@
 </head>
 <body>
 
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <a href="/health_check"><i class="fas fa-heartbeat"></i>Health Check</a>
-        <a href="/emotion"><i class="fas fa-smile"></i>Emotion Recognition</a>
-        <a href="/safety_alert"><i class="fas fa-exclamation-triangle"></i>Safety Alerts</a>
-        <a href="/physical-interaction"><i class="fas fa-hands-helping"></i>Physical Interaction</a>
-        <a href="/medication"><i class="fas fa-pills"></i>Medication Reminder</a>
-        <a href="/character-customization"><i class="fas fa-user-cog"></i>Customize Your Character</a>
-        <a href="/wellness-rewards"><i class="fas fa-trophy"></i>Wellness Rewards</a>
-    </div>
+    <div id="sidebar-container"></div>
 
     <!-- Main Content Area -->
     <div class="content">
@@ -105,6 +85,12 @@
             <p><a href="https://www.baymax.com" style="color: white;">Learn more about Baymax</a></p>
         </div>
     </div>
-
+<script>
+    fetch('/templates/sidebar.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('sidebar-container').innerHTML = data;
+            });
+</script>
 </body>
 </html>

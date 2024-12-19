@@ -6,6 +6,28 @@
     <title>Breathing Exercise</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
+        /* Add your styles for the sidebar */
+        .sidebar {
+            width: 250px;
+            background-color: #333;
+            color: white;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding-top: 20px;
+        }
+        .sidebar a {
+            display: block;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            font-size: 18px;
+        }
+        .sidebar a:hover {
+            background-color: #575757;
+        }
+
         body {
             background-color: #f0f8ff;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -53,6 +75,8 @@
     </style>
 </head>
 <body>
+
+    <div id="sidebar-container"></div>
     <div class="container">
         <h1 class="header text-center">Breathing Exercise</h1>
         <p class="text-center">Take a moment for yourself. Breathe in for 4 seconds, hold for 4 seconds, breathe out for 4 seconds.</p>
@@ -72,6 +96,12 @@
     </div>
 
     <script>
+        fetch('/templates/sidebar.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('sidebar-container').innerHTML = data;
+            });
+
         let timer;
         let seconds = 60;
         let phase = "breatheIn"; // "breatheIn", "hold", "breatheOut"

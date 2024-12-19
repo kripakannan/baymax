@@ -6,7 +6,31 @@
     <title>Medication Reminder</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
+<style>
+    /* Add your styles for the sidebar */
+        .sidebar {
+            width: 250px;
+            background-color: #333;
+            color: white;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding-top: 20px;
+        }
+        .sidebar a {
+            display: block;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            font-size: 18px;
+        }
+        .sidebar a:hover {
+            background-color: #575757;
+        }
+</style>
 <body>
+    <div id="sidebar-container"></div>
     <div class="container my-5">
         <h1 class="text-center">Medication Reminder</h1>
 
@@ -90,5 +114,12 @@
             </table>
         </div>
     </div>
+<script>
+    fetch('/templates/sidebar.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('sidebar-container').innerHTML = data;
+            });
+</script>
 </body>
 </html>

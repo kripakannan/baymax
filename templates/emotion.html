@@ -60,6 +60,27 @@
         .list-group-item a:hover {
             color: #0056b3;
         }
+        /* Add your styles for the sidebar */
+        .sidebar {
+            width: 250px;
+            background-color: #333;
+            color: white;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding-top: 20px;
+        }
+        .sidebar a {
+            display: block;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            font-size: 18px;
+        }
+        .sidebar a:hover {
+            background-color: #575757;
+        }
         .chart-container {
             max-width: 90%;
             margin: 0 auto;
@@ -74,6 +95,7 @@
     </style>
 </head>
 <body>
+    <div id="sidebar-container"></div>
     <div class="container">
         <h1 class="header text-center mb-4">Rate Your Mental Health</h1>
 
@@ -122,6 +144,11 @@
     </div>
 
     <script>
+        fetch('/templates/sidebar.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('sidebar-container').innerHTML = data;
+            });
         // Generate a chart to display mood tracking data
         var moodData = {{ mood_data|tojson }};
         var labels = moodData.map(function(item) {
