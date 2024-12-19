@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Safety Alerts</title>
+    <title>Baymax Safety Alerts</title>
     <!-- Bootstrap 4 CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom Styles -->
@@ -11,11 +11,16 @@
         body {
             background-color: #f8f9fa;
             font-family: Arial, sans-serif;
+            margin-left: 250px; /* Keep space for sidebar */
+            transition: background-color 0.3s ease;
         }
+
         .container {
             max-width: 800px;
+            margin-top: 30px;
         }
-        /* Add your styles for the sidebar */
+
+        /* Sidebar */
         .sidebar {
             width: 250px;
             background-color: #333;
@@ -26,6 +31,7 @@
             left: 0;
             padding-top: 20px;
         }
+
         .sidebar a {
             display: block;
             color: white;
@@ -33,29 +39,84 @@
             text-decoration: none;
             font-size: 18px;
         }
+
         .sidebar a:hover {
             background-color: #575757;
         }
-        .alert {
-            margin-bottom: 15px;
-        }
-        .filter-container {
-            margin-bottom: 20px;
-        }
+
+        /* Alerts List */
         .alert-list {
             max-height: 400px;
             overflow-y: auto;
+            margin-top: 20px;
         }
+
         .alert-item {
-            transition: background-color 0.3s ease;
+            background-color: #fff;
+            margin: 10px 0;
+            border-radius: 8px;
+            padding: 15px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
         }
+
         .alert-item:hover {
             background-color: #f1f1f1;
+            transform: scale(1.03);
+        }
+
+        .badge-active {
+            background-color: #28a745;
+        }
+
+        .badge-inactive {
+            background-color: #ffc107;
+        }
+
+        .badge-resolved {
+            background-color: #007bff;
+        }
+
+        .alert-item strong {
+            font-size: 18px;
+            margin-right: 10px;
+        }
+
+        .alert-item .badge {
+            font-size: 14px;
+        }
+
+        /* Filter Section */
+        .filter-container {
+            margin-bottom: 20px;
+        }
+
+        .form-control:focus {
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                margin-left: 0; /* Adjust for mobile view */
+            }
+
+            .sidebar {
+                width: 200px;
+            }
+
+            .container {
+                padding-left: 10px;
+                padding-right: 10px;
+            }
         }
     </style>
 </head>
 <body>
+
+    <!-- Sidebar -->
     <div id="sidebar-container"></div>
+
+    <!-- Main Content -->
     <div class="container text-center">
         <h1 class="my-5">Baymax Safety Alerts</h1>
 
@@ -80,7 +141,7 @@
         <div class="alert-list">
             <ul class="list-group">
                 {% for alert in alerts %}
-                    {% set alert_status = alert['status'] if alert['status'] else 'Active' %}  <!-- Default to 'Active' if no status -->
+                    {% set alert_status = alert['status'] if alert['status'] else 'Active' %}
                     <li class="list-group-item alert-item" data-status="{{ alert_status }}" data-type="{{ alert['type'] }}">
                         <strong>{{ alert['type'] }}:</strong>
                         <span class="badge badge-{{ alert_status | lower }}">{{ alert_status }}</span>
@@ -105,6 +166,7 @@
             .then(data => {
                 document.getElementById('sidebar-container').innerHTML = data;
             });
+
         // Filter alerts based on search input and selected status
         function filterAlerts() {
             var searchValue = document.getElementById('search-bar').value.toLowerCase();
@@ -126,13 +188,14 @@
             });
         }
 
-        // Function to show an alert when a new one is added (for demo purposes)
+        // Simulate a new alert notification (for demo purposes)
         function showNewAlertNotification() {
             alert("New safety alert has been added!");
         }
 
-        // Trigger the new alert notification (you can call this when a new alert is added in real-time)
-        setTimeout(showNewAlertNotification, 5000);  // Simulate a new alert after 5 seconds
+        // Trigger the new alert notification after 5 seconds
+        setTimeout(showNewAlertNotification, 5000);
     </script>
+
 </body>
 </html>

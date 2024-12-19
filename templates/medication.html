@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Medication Reminder</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<style>
-    /* Add your styles for the sidebar */
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        /* Sidebar styling */
         .sidebar {
             width: 250px;
             background-color: #333;
@@ -17,6 +17,7 @@
             top: 0;
             left: 0;
             padding-top: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
         }
         .sidebar a {
             display: block;
@@ -28,7 +29,71 @@
         .sidebar a:hover {
             background-color: #575757;
         }
-</style>
+
+        /* Main container styling */
+        .container {
+            margin-left: 270px;
+            padding: 20px;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        /* Add subtle animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Card styling */
+        .card {
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Header styling */
+        h1 {
+            font-size: 3rem;
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+
+        /* Form button */
+        .btn-primary {
+            background: linear-gradient(45deg, #007bff, #00c6ff);
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+        }
+        .btn-primary:hover {
+            background: linear-gradient(45deg, #00c6ff, #007bff);
+        }
+
+        /* Table styling */
+        .table {
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        .thead-light {
+            background: linear-gradient(45deg, #007bff, #00c6ff);
+            color: white;
+        }
+        .table-bordered td, .table-bordered th {
+            border: 1px solid #ddd;
+        }
+
+        /* Responsive table */
+        .table-responsive {
+            background: white;
+            border-radius: 15px;
+            padding: 15px;
+        }
+
+        /* Checkbox styling */
+        .form-check-input {
+            transform: scale(1.5);
+            margin-right: 10px;
+        }
+    </style>
+</head>
 <body>
     <div id="sidebar-container"></div>
     <div class="container my-5">
@@ -37,7 +102,7 @@
         <!-- Add Medication Form -->
         <div class="card my-4">
             <div class="card-body">
-                <h4>Add New Medication</h4>
+                <h4 class="text-primary">Add New Medication</h4>
                 <form method="POST">
                     <div class="form-group">
                         <label for="name">Medication Name:</label>
@@ -84,7 +149,7 @@
         </div>
 
         <!-- Medication Schedule Table -->
-        <h4 class="text-center my-4">Weekly Medication Schedule</h4>
+        <h4 class="text-center my-4 text-primary">Weekly Medication Schedule</h4>
         <div class="table-responsive">
             <table class="table table-bordered">
                 <thead class="thead-light">
@@ -116,10 +181,10 @@
     </div>
 <script>
     fetch('/templates/sidebar.html')
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById('sidebar-container').innerHTML = data;
-            });
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('sidebar-container').innerHTML = data;
+        });
 </script>
 </body>
 </html>
