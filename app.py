@@ -93,6 +93,10 @@ def medication():
 def physical_interaction():
     return render_template('physical_interaction.html')
 
+@app.route('/character-customization')
+def character_customization():
+    return render_template('character_customization.html')
+
 # Route for Hugging Baymax
 @app.route('/hug_baymax')
 def hug_baymax():

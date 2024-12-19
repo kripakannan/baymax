@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Character Customization</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Character container */
+        .character-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-top: 50px;
+            position: relative;
+        }
+
+        /* Head - Circle */
+        .head {
+            width: 100px;
+            height: 100px;
+            background-color: #ffcc99;
+            border-radius: 50%;
+            position: relative;
+        }
+
+        /* Body - Rectangle */
+        .body {
+            width: 120px;
+            height: 200px;
+            background-color: #3399ff;
+            border-radius: 10px;
+            position: relative;
+            margin-top: -20px;
+        }
+
+        /* Arms */
+        .arms {
+            position: absolute;
+            top: 50px;
+            left: -40px;
+            right: -40px;
+            display: flex;
+            justify-content: space-between;
+            width: 200px;
+        }
+
+        .arm {
+            width: 40px;
+            height: 100px;
+            background-color: #ffcc99;
+        }
+
+        /* Legs - Positioned at the bottom of the body */
+        .legs {
+            display: flex;
+            justify-content: space-between;
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+        }
+
+        .leg {
+            width: 40px;
+            height: 120px;
+            background-color: #ffcc99;
+        }
+
+        /* Customize Options */
+        .customization-options {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .option-label {
+            font-weight: bold;
+        }
+
+        /* Save Button */
+        .save-btn {
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container text-center">
+    <h1 class="my-5">Character Customization</h1>
+
+    <!-- Character Display -->
+    <div class="character-container">
+        <div class="head" id="head"></div>
+        <div class="body" id="body">
+            <!-- Arms will appear here -->
+            <div class="arms">
+                <div class="arm" id="left-arm"></div>
+                <div class="arm" id="right-arm"></div>
+            </div>
+        </div>
+        <!-- Legs now attached to the bottom of the body -->
+        <div class="legs">
+            <div class="leg" id="left-leg"></div>
+            <div class="leg" id="right-leg"></div>
+        </div>
+    </div>
+
+    <!-- Customization Options -->
+    <div class="customization-options">
+        <div class="form-group">
+            <label for="head-color" class="option-label">Head Color</label>
+            <input type="color" id="head-color" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="body-color" class="option-label">Body Color</label>
+            <input type="color" id="body-color" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="arm-color" class="option-label">Arm Color</label>
+            <input type="color" id="arm-color" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="leg-color" class="option-label">Leg Color</label>
+            <input type="color" id="leg-color" class="form-control">
+        </div>
+
+        <button class="btn btn-primary save-btn" id="save-btn">Save Customizations</button>
+    </div>
+</div>
+
+<script>
+    // Select the color input elements
+    const headColorInput = document.getElementById("head-color");
+    const bodyColorInput = document.getElementById("body-color");
+    const armColorInput = document.getElementById("arm-color");
+    const legColorInput = document.getElementById("leg-color");
+
+    // Select the elements for the head, body, arms, and legs
+    const head = document.getElementById("head");
+    const body = document.getElementById("body");
+    const leftArm = document.getElementById("left-arm");
+    const rightArm = document.getElementById("right-arm");
+    const leftLeg = document.getElementById("left-leg");
+    const rightLeg = document.getElementById("right-leg");
+
+    // Update the character's appearance based on selected colors
+    headColorInput.addEventListener("input", (event) => {
+        head.style.backgroundColor = event.target.value;
+    });
+
+    bodyColorInput.addEventListener("input", (event) => {
+        body.style.backgroundColor = event.target.value;
+    });
+
+    armColorInput.addEventListener("input", (event) => {
+        leftArm.style.backgroundColor = event.target.value;
+        rightArm.style.backgroundColor = event.target.value;
+    });
+
+    legColorInput.addEventListener("input", (event) => {
+        leftLeg.style.backgroundColor = event.target.value;
+        rightLeg.style.backgroundColor = event.target.value;
+    });
+
+    // Save the customizations (in this case, just log them to the console)
+    document.getElementById("save-btn").addEventListener("click", () => {
+        const customizations = {
+            headColor: head.style.backgroundColor,
+            bodyColor: body.style.backgroundColor,
+            armColor: leftArm.style.backgroundColor,
+            legColor: leftLeg.style.backgroundColor
+        };
+        console.log("Customizations saved:", customizations);
+        alert("Customizations saved!");
+    });
+</script>
+
+</body>
+</html>
