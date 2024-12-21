@@ -147,6 +147,10 @@
             gap: 1rem;
         }
 
+        .layout {
+            display: flex;
+        }
+
         /* Add your styles for the sidebar */
         .sidebar {
             width: 250px;
@@ -203,38 +207,49 @@
             text-decoration: underline;
         }
 
+        /* Adjust content to account for sidebar */
+        .content {
+            margin-left: 250px; /* Matches the sidebar width */
+            width: calc(100% - 250px); /* Remaining space */
+        }
+
         @media (max-width: 768px) {
-            .category-cards {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            header input {
+            .sidebar {
+                position: relative;
                 width: 100%;
+                height: auto;
             }
-            .hero h2 {
-                font-size: 2rem;
+
+            .content {
+                margin-left: 0;
+                width: 100%;
             }
         }
     </style>
 </head>
 <body>
-<div id="sidebar-container"></div>
-<!-- Header Section -->
-<header>
-    <div class="logo">
-        <h1>Wellness Connect</h1>
+
+<div class="layout">
+    <div id="sidebar-container" class="sidebar"></div>
+    <div class="content">
+    <header>
+        <div class="logo">
+            <h1>Wellness Connect</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Topics</a></li>
+                <li><a href="#">Resources</a></li>
+                <li><a href="#">Events</a></li>
+                <li><a href="#">Profile</a></li>
+                <li><a href="#">Settings</a></li>
+            </ul>
+        </nav>
+        <input type="text" placeholder="Search discussions...">
+    </header>
     </div>
-    <nav>
-        <ul>
-            <li><a href="#">Home</a></li>
-            <li><a href="#">Topics</a></li>
-            <li><a href="#">Resources</a></li>
-            <li><a href="#">Events</a></li>
-            <li><a href="#">Profile</a></li>
-            <li><a href="#">Settings</a></li>
-        </ul>
-    </nav>
-    <input type="text" placeholder="Search discussions...">
-</header>
+</div>
 
 <!-- Hero Section -->
 <section class="hero">

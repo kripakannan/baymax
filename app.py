@@ -147,6 +147,10 @@ def physical_interaction():
 def journal():
     return render_template('journal.html')
 
+@app.route('/healthy-habit')
+def healthy_habit():
+    return render_template('healthy_habit.html')
+
 @app.route('/community')
 def community():
     return render_template('community.html')

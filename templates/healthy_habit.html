@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Healthy Habit Builder</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #333;
+            color: white;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding-top: 20px;
+        }
+        .sidebar a {
+            display: block;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            font-size: 18px;
+        }
+        .sidebar a:hover {
+            background-color: #575757;
+        }
+
+        .content {
+            margin-left: 250px;
+            padding: 20px;
+            width: calc(100% - 250px);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-section h2 {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #4cae4c;
+        }
+
+        .progress-tracker {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .progress-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #e3e3e3;
+            border-radius: 5px;
+            padding: 10px;
+        }
+
+        .progress-item span {
+            font-size: 16px;
+        }
+
+        .progress-bar {
+            flex: 1;
+            margin: 0 10px;
+            height: 10px;
+            background: #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: #5cb85c;
+            transition: width 0.3s ease;
+        }
+
+        #nutrition-options {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="sidebar-container" class="sidebar"></div>
+
+    <div class="content">
+        <h1>Healthy Habit Builder</h1>
+
+        <!-- Goal Setting Section -->
+        <div class="form-section">
+            <h2>Set Your Goals</h2>
+            <form id="goal-form">
+                <label for="goal-type">Goal Type:</label>
+                <select id="goal-type" required>
+                    <option value="sleep">Sleep</option>
+                    <option value="exercise">Exercise</option>
+                    <option value="nutrition">Nutrition</option>
+                </select>
+
+                <div id="nutrition-options">
+                    <label for="nutrition-type">Nutrition Type:</label>
+                    <select id="nutrition-type">
+                        <option value="calories">Calories</option>
+                        <option value="protein">Protein (grams)</option>
+                        <option value="fat">Fat (grams)</option>
+                        <option value="carbs">Carbs (grams)</option>
+                    </select>
+                </div>
+
+                <label for="goal-amount" id="goal-label">Target (Hours or Quantity):</label>
+                <input type="number" id="goal-amount" min="1" required>
+
+                <button type="submit">Add Goal</button>
+            </form>
+        </div>
+
+        <!-- Progress Tracking Section -->
+        <div class="form-section">
+            <h2>Progress Tracker</h2>
+            <div class="progress-tracker" id="progress-tracker"></div>
+        </div>
+    </div>
+
+    <script>
+        fetch('/templates/sidebar.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('sidebar-container').innerHTML = data;
+            });
+        const goalForm = document.getElementById('goal-form');
+        const goalType = document.getElementById('goal-type');
+        const nutritionOptions = document.getElementById('nutrition-options');
+        const nutritionType = document.getElementById('nutrition-type');
+        const goalLabel = document.getElementById('goal-label');
+        const progressTracker = document.getElementById('progress-tracker');
+
+        let goals = [];
+
+        goalType.addEventListener('change', () => {
+            if (goalType.value === 'nutrition') {
+                nutritionOptions.style.display = 'block';
+                goalLabel.textContent = 'Target (Select Nutrition Type Below):';
+
+                nutritionType.addEventListener('change', () => {
+                    switch (nutritionType.value) {
+                        case 'calories':
+                            goalLabel.textContent = 'Target (Calories):';
+                            break;
+                        case 'protein':
+                            goalLabel.textContent = 'Target (Protein in grams):';
+                            break;
+                        case 'fat':
+                            goalLabel.textContent = 'Target (Fat in grams):';
+                            break;
+                        case 'carbs':
+                            goalLabel.textContent = 'Target (Carbs in grams):';
+                            break;
+                    }
+                });
+            } else {
+                nutritionOptions.style.display = 'none';
+                switch (goalType.value) {
+                    case 'sleep':
+                        goalLabel.textContent = 'Target (Hours of Sleep):';
+                        break;
+                    case 'exercise':
+                        goalLabel.textContent = 'Target (Hours of Exercise):';
+                        break;
+                }
+            }
+        });
+
+        goalForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const goalTypeValue = goalType.value;
+            const goalAmount = parseInt(document.getElementById('goal-amount').value, 10);
+
+            if (goalAmount > 0) {
+                const goal = {
+                    type: goalTypeValue,
+                    target: goalAmount,
+                    progress: 0,
+                };
+
+                goals.push(goal);
+                renderGoals();
+                goalForm.reset();
+                goalLabel.textContent = 'Target (Hours or Quantity):';
+            }
+        });
+
+        function renderGoals() {
+            progressTracker.innerHTML = '';
+            goals.forEach((goal, index) => {
+                const goalElement = document.createElement('div');
+                goalElement.className = 'progress-item';
+
+                const goalLabel = document.createElement('span');
+                goalLabel.textContent = `${goal.type.charAt(0).toUpperCase() + goal.type.slice(1)} (${goal.progress}/${goal.target})`;
+
+                const progressBar = document.createElement('div');
+                progressBar.className = 'progress-bar';
+
+                const progressBarFill = document.createElement('div');
+                progressBarFill.className = 'progress-bar-fill';
+                progressBarFill.style.width = `${(goal.progress / goal.target) * 100}%`;
+
+                progressBar.appendChild(progressBarFill);
+
+                const updateButton = document.createElement('button');
+                updateButton.textContent = 'Update';
+                updateButton.onclick = () => {
+                    if (goal.progress < goal.target) {
+                        goal.progress++;
+                        renderGoals();
+                    }
+                };
+
+                goalElement.appendChild(goalLabel);
+                goalElement.appendChild(progressBar);
+                goalElement.appendChild(updateButton);
+
+                progressTracker.appendChild(goalElement);
+            });
+        }
+    </script>
+</body>
+</html>
