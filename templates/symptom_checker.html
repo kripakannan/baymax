@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Symptom Checker</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin-left: 250px; /* Reserve space for the sidebar */
+            background-color: #f4f4f9;
+        }
+
+        .main-container {
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .form-control, .btn {
+            margin-bottom: 10px;
+        }
+
+        .results-container {
+            margin-top: 20px;
+        }
+
+        /* Sidebar styles are inherited */
+        .sidebar {
+            width: 250px;
+            background-color: #333;
+            color: white;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding-top: 20px;
+        }
+
+        .sidebar a {
+            display: block;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            font-size: 18px;
+        }
+
+        .sidebar a:hover {
+            background-color: #575757;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar Container -->
+    <div id="sidebar-container" class="sidebar"></div>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <div class="header">
+            <h1>Symptom Checker</h1>
+            <p>Log your symptoms and get personalized recommendations or connect with a healthcare provider.</p>
+        </div>
+
+        <div class="form-container">
+            <form id="symptom-form">
+                <div class="mb-3">
+                    <label for="symptoms" class="form-label">Enter Your Symptoms:</label>
+                    <textarea id="symptoms" class="form-control" rows="5" placeholder="Describe your symptoms here..."></textarea>
+                </div>
+                <button type="button" id="submit-btn" class="btn btn-primary">Get Recommendations</button>
+            </form>
+        </div>
+
+        <div id="results" class="results-container"></div>
+    </div>
+
+    <script>
+        // Load sidebar content
+        fetch('/templates/sidebar.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('sidebar-container').innerHTML = data;
+            });
+
+        // Symptom Checker Functionality
+        document.getElementById('submit-btn').addEventListener('click', () => {
+            const symptoms = document.getElementById('symptoms').value;
+            const resultsContainer = document.getElementById('results');
+
+            if (!symptoms.trim()) {
+                resultsContainer.innerHTML = '<div class="alert alert-danger">Please enter your symptoms.</div>';
+                return;
+            }
+
+            resultsContainer.innerHTML = '<div class="alert alert-info">Processing your symptoms...</div>';
+
+            // Simulate AI-driven recommendations
+            setTimeout(() => {
+                const recommendations = `
+                    <h3>Recommendations:</h3>
+                    <ul>
+                        <li>Based on your symptoms, we recommend staying hydrated and resting.</li>
+                        <li>If symptoms persist, consult a healthcare provider immediately.</li>
+                    </ul>
+                    <p><strong>Need more help?</strong> <a href="#" class="btn btn-link">Connect with a Healthcare Provider</a></p>
+                `;
+                resultsContainer.innerHTML = recommendations;
+            }, 2000);
+        });
+    </script>
+</body>
+</html>

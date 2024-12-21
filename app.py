@@ -151,6 +151,10 @@ def journal():
 def healthy_habit():
     return render_template('healthy_habit.html')
 
+@app.route('/symptom-checker')
+def symptom_checker():
+    return render_template('symptom_checker.html')
+
 @app.route('/community')
 def community():
     return render_template('community.html')
